@@ -111,3 +111,38 @@ describe('making a guess', () => {
         expect(wordle.currGuess).toBe(1)
     })
 })
+
+describe('checking if the Wordle has been solved', () => {
+    test('returns true if the latest guess is the correct word', () => {
+        const wordle = new Wordle()
+        wordle.appendGuess('APPLE')
+        expect(wordle.isSolved()).toBe(true)
+    })
+    test('returns false if the latest guess is not the correct word', () => {
+        const wordle = new Wordle()
+        wordle.appendGuess('GUESS')
+        expect(wordle.isSolved()).toBe(false)
+    })
+})
+
+describe('checking if the game should end', () => {
+    test('returns true if the latest guess is the correct word', () => {
+        const wordle = new Wordle()
+        wordle.appendGuess('APPLE')
+        expect(wordle.shouldEndGame()).toBe(true)
+    })
+    test('returns true if there are no more guesses left', () => {
+        const wordle = new Wordle(1)
+        wordle.appendGuess('GUESS')
+        expect(wordle.shouldEndGame()).toBe(true)
+    })
+    test('returns false if no guess has been made', () => {
+        const wordle = new Wordle()
+        expect(wordle.shouldEndGame()).toBe(false)
+    })
+    test('returns false if there are guesses left and the word has not been guessed', () => {
+        const wordle = new Wordle()
+        wordle.appendGuess('GUESS')
+        expect(wordle.shouldEndGame()).toBe(false)
+    })
+})
