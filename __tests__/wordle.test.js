@@ -1,9 +1,10 @@
 import { jest } from '@jest/globals'
 
+const mockIsWord = jest.fn(() => true)
 jest.unstable_mockModule('../src/words.js', () => {
     return {
         getWord: jest.fn(() => 'APPLE'),
-        isWord: jest.fn(() => true),
+        isWord: mockIsWord,
     };
 });
 
@@ -75,5 +76,38 @@ describe('building a guess array from a string', () => {
         const wordle = new Wordle()
         const guess = wordle.buildGuessFromWord('Z____')
         expect(guess[0].status).toBe('ABSENT')
+    })
+})
+
+describe('making a guess', () => {
+    test('Test that it throws an error if no more guesses are allowed', () => {
+            // Construct a new Wordle instance. Pass 1 to the constructor so you create a Wordle instance that only accepts one guess.
+            // Call appendGuess to make one guess.
+            // Calling appendGuess again should throw an error.
+        const wordle = new Wordle(1)
+        wordle.appendGuess('GUESS')
+        expect(() => wordle.appendGuess('GUESS')).toThrow();
+    })
+    test('Test that it throws an error if the guess is not of length 5', () => {
+            // Construct a new Wordle instance.
+            // Calling appendGuess with a string more than five characters long should throw an error.
+        const wordle = new Wordle()
+        expect(() => wordle.appendGuess('GUESSES')).toThrow();
+    })
+    test('Test that it throws an error if the guess is not a word', () => {
+            // Construct a new Wordle instance.
+            // Change the return value of mockIsWord to false.
+            // Calling appendGuess with any five-character string (like 'GUESS') should throw an error.
+        const wordle = new Wordle()
+        mockIsWord.mockReturnValueOnce(false)
+        expect(() => wordle.appendGuess('GUESS')).toThrow()
+    })
+    test('Test that it increments the current guess', () => {
+            // Construct a new Wordle instance.
+            // Call appendGuess.
+            // Check that the instance’s currGuess property is 1.
+        const wordle = new Wordle()
+        wordle.appendGuess('GUESS')
+        expect(wordle.currGuess).toBe(1)
     })
 })
